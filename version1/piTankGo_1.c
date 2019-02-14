@@ -17,7 +17,7 @@ int tiemposImpacto[32] = {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,
 
 int flags_juego = 0;
 int flags_player = 0;
-volatile int flags=0;
+
 
 //------------------------------------------------------
 // FUNCIONES DE CONFIGURACION/INICIALIZACION
@@ -31,8 +31,9 @@ volatile int flags=0;
 // crear, si fuese necesario, los threads adicionales que pueda requerir el sistema
 int ConfiguraSistema (TipoSistema *p_sistema) {
 	int result = 0;
-	// A completar por el alumno...
-	// ...
+	piLock(STD_IO_BUFFER_KEY);
+	wiringPiSetupGpio();
+	piUnlock(STD_IO_BUFFER_KEY);
 
 	return result;
 }
@@ -77,9 +78,19 @@ PI_THREAD (thread_explora_teclado_PC) {
 			switch(teclaPulsada) {
 				// A completar por el alumno...
 				// ...
+				case 'd':
+					piLock(PLAYER_FLAGS_KEY);
+					flags_player |= FLAG_START_DISPARO;
+					piUnlock(PLAYER_FLAGS_KEY);
+					printf("Tecla D pulsada!\n");
+					fflush(stdout);
+					break;
 				case 's':
 					// A completar por el alumno...
 					// ...
+					piLock(PLAYER_FLAGS_KEY);
+					flags_player |= FLAG_START_DISPARO;
+					piUnlock(PLAYER_FLAGS_KEY);
 					printf("Tecla S pulsada!\n");
 					fflush(stdout);
 					break;
