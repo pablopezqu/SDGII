@@ -48,7 +48,9 @@ int InicializaSistema (TipoSistema *p_sistema) {
 
 	// A completar por el alumno...
 	// ...
-
+	InicializaEfecto(&p_sistema->player.efecto_disparo,"DISPARO",frecuenciaDespacito,tiempoDespacito,160);
+	p_sistema->player.p_efecto=&p_sistema->player.efecto_disparo;
+	InicializaPlayer(&p_sistema->player);
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	result = piThreadCreate (thread_explora_teclado_PC);
 
@@ -81,6 +83,7 @@ PI_THREAD (thread_explora_teclado_PC) {
 				case 'd':
 					piLock(PLAYER_FLAGS_KEY);
 					flags_player |= FLAG_START_DISPARO;
+					flags_player |= FLAG_NOTA_TIMEOUT;
 					piUnlock(PLAYER_FLAGS_KEY);
 					printf("Tecla D pulsada!\n");
 					fflush(stdout);
@@ -89,7 +92,7 @@ PI_THREAD (thread_explora_teclado_PC) {
 					// A completar por el alumno...
 					// ...
 					piLock(PLAYER_FLAGS_KEY);
-					flags_player |= FLAG_START_DISPARO;
+					flags_player |= FLAG_START_IMPACTO;
 					piUnlock(PLAYER_FLAGS_KEY);
 					printf("Tecla S pulsada!\n");
 					fflush(stdout);
@@ -146,8 +149,8 @@ int main ()
 	while (1) {
 		fsm_fire (player_fsm);
 		// A completar por el alumno...
-		// ...
-
+		// La verdad es que me estoy aburriendo bastante, porque el sinverguenza de mi compañero no para de acaparar el uso del teclado y el ratón, impidiendome a mi, el cerebro del equipo, llevar a cabo el proyecto y terminarlo en segundos, pero el pobre es orgulloso y cree que puede hacerlo por su cuenta, pero no, no puede, y es arrogante e insoportable
+		// fdo.: Bocata
 		next += CLK_MS;
 		delay_until (next);
 	}
