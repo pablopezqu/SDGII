@@ -1,6 +1,10 @@
 
 #include "piTankGo_1.h"
-
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#include "fsm.h"
+#include "tmr.h"
 int frecuenciaDespacito[160] = {0,1175,1109,988,740,740,740,740,740,740,988,988,988,988,880,988,784,0,784,784,784,784,784,988,988,988,988,1109,1175,880,0,880,880,880,880,880,1175,1175,1175,1175,1318,1318,1109,0,1175,1109,988,740,740,740,740,740,740,988,988,988,988,880,988,784,0,784,784,784,784,784,988,988,988,988,1109,1175,880,0,880,880,880,880,880,1175,1175,1175,1175,1318,1318,1109,0,1480,1318,1480,1318,1480,1318,1480,1318,1480,1318,1480,1568,1568,1175,0,1175,1568,1568,1568,0,1568,1760,1568,1480,0,1480,1480,1480,1760,1568,1480,1318,659,659,659,659,659,659,659,659,554,587,1480,1318,1480,1318,1480,1318,1480,1318,1480,1318,1480,1568,1568,1175,0,1175,1568,1568,1568,1568,1760,1568,1480,0,1480,1480,1480,1760,1568,1480,1318};
 int tiempoDespacito[160] = {1200,600,600,300,300,150,150,150,150,150,150,150,150,300,150,300,343,112,150,150,150,150,150,150,150,150,300,150,300,300,150,150,150,150,150,150,150,150,150,300,150,300,800,300,600,600,300,300,150,150,150,150,150,150,150,150,300,150,300,343,112,150,150,150,150,150,150,150,150,300,150,300,300,150,150,150,150,150,150,150,150,150,300,150,300,450,1800,150,150,150,150,300,150,300,150,150,150,300,150,300,450,450,300,150,150,225,75,150,150,300,450,800,150,150,300,150,150,300,450,150,150,150,150,150,150,150,150,300,300,150,150,150,150,150,150,450,150,150,150,300,150,300,450,450,300,150,150,150,300,150,300,450,800,150,150,300,150,150,300,450};
 int frecuenciaGOT[518] = {1568,0,1046,0,1244,0,1397,0,1568,0,1046,0,1244,0,1397,0,1175,0,1397,0,932,0,1244,0,1175,0,1397,0,932,0,1244,0,1175,0,1046,0,831,0,698,0,523,0,349,0,784,0,523,0,523,0,587,0,622,0,698,0,784,0,523,0,622,0,698,0,784,0,523,0,622,0,698,0,587,0,698,0,466,0,622,0,587,0,698,0,466,0,622,0,587,0,523,0,523,0,587,0,622,0,698,0,784,0,523,0,622,0,698,0,784,0,523,0,622,0,698,0,587,0,698,0,466,0,622,0,587,0,698,0,466,0,622,0,587,0,523,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1175,0,587,0,622,0,587,0,523,0,587,0,784,0,880,0,932,0,1046,0,1175,0,0,1397,0,0,932,0,0,1244,0,0,1175,0,0,1397,0,0,932,0,0,1244,0,0,1175,0,0,1046,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1175,0,880,0,784,0,932,0,1244,0,0,1397,0,0,932,0,0,1175,0,0,1244,0,0,1175,0,0,932,0,0,1046,0,0,2093,0,622,0,831,0,932,0,1046,0,622,0,831,0,1046,0,0,1865,0,622,0,784,0,831,0,932,0,622,0,784,0,932,0,0,1661,0,523,0,698,0,784,0,831,0,523,0,698,0,831,0,0,1568,0,1046,0,1244,0,1397,0,1568,0,1046,0,1244,0,1397,0,0,0,1661,0,1046,0,1175,0,1244,0,831,0,1175,0,1244,0,0,0,0,2489,0,0,0,0,2794,0,0,0,0,3136,0,0,2093,0,622,0,831,0,932,0,1046,0,622,0,831,0,1046,0,0,1865,0,622,0,784,0,831,0,932,0,622,0,784,0,932,0,0,1661,0,523,0,698,0,784,0,831,0,523,0,698,0,831,0,0,1568,0,1046,0,1244,0,1397,0,1568,0,1046,0,1244,0,1397,0,0,0,1661,0,1046,0,1175,0,1244,0,831,0,1175,0,1244,0,0,0,0,2489,0,1397,0,0,0,2350,0,0,0,2489,0,0,0,2350,0,0,0,0,2093,0,392,0,415,0,466,0,523,0,392,0,415,0,466,0,523,0,392,0,415,0,466,0,2093,0,1568,0,1661,0,1865,0,2093,0,1568,0,1661,0,1865,0,2093,0,1568,0,1661,0,1865};
@@ -32,7 +36,7 @@ int flags_player = 0;
 int ConfiguraSistema (TipoSistema *p_sistema) {
 	int result = 0;
 	piLock(STD_IO_BUFFER_KEY);
-	wiringPiSetupGpio();
+	wiringPiSetupGpio();	//meter aquí el softToneCreate()?
 	piUnlock(STD_IO_BUFFER_KEY);
 
 	return result;
@@ -48,9 +52,12 @@ int InicializaSistema (TipoSistema *p_sistema) {
 
 	// A completar por el alumno...
 	// ...
-	InicializaEfecto(&p_sistema->player.efecto_disparo,"DISPARO",frecuenciaDespacito,tiempoDespacito,160);
+	InicializaEfecto(&p_sistema->player.efecto_disparo,"DISPARO",frecuenciaGOT,tiempoGOT,518);
 	p_sistema->player.p_efecto=&p_sistema->player.efecto_disparo;
+	InicializaEfecto(&p_sistema->player.efecto_impacto,"IMPACTO",frecuenciaTetris,tiempoTetris,55);
+	p_sistema->player.p_efecto=&p_sistema->player.efecto_impacto;
 	InicializaPlayer(&p_sistema->player);
+	p_sistema->player.tmr=tmr_new(timer_player_duracion_nota_actual_isr);
 	// Lanzamos thread para exploracion del teclado convencional del PC
 	result = piThreadCreate (thread_explora_teclado_PC);
 
@@ -83,7 +90,6 @@ PI_THREAD (thread_explora_teclado_PC) {
 				case 'd':
 					piLock(PLAYER_FLAGS_KEY);
 					flags_player |= FLAG_START_DISPARO;
-					flags_player |= FLAG_NOTA_TIMEOUT;
 					piUnlock(PLAYER_FLAGS_KEY);
 					printf("Tecla D pulsada!\n");
 					fflush(stdout);
@@ -123,16 +129,13 @@ void delay_until (unsigned int next) {
 
 int main ()
 {
-
 	TipoSistema sistema;
 	unsigned int next;
 
 	// Configuracion e inicializacion del sistema
 	ConfiguraSistema (&sistema);
 
-
 	InicializaSistema (&sistema);
-
 
 	fsm_trans_t reproductor[] = {
 		{ WAIT_START, CompruebaStartDisparo, WAIT_NEXT, InicializaPlayDisparo },
@@ -152,8 +155,7 @@ int main ()
 	while (1) {
 		fsm_fire (player_fsm);
 		// A completar por el alumno...
-		// La verdad es que me estoy aburriendo bastante, porque el sinverguenza de mi compaï¿½ero no para de acaparar el uso del teclado y el ratï¿½n, impidiendome a mi, el cerebro del equipo, llevar a cabo el proyecto y terminarlo en segundos, pero el pobre es orgulloso y cree que puede hacerlo por su cuenta, pero no, no puede, y es arrogante e insoportable
-		// fdo.: Bocata
+
 		next += CLK_MS;
 		delay_until (next);
 	}

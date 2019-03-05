@@ -4,6 +4,7 @@
 #include <wiringPi.h>
 #include <time.h>
 #include <softTone.h>
+#include "tmr.h"
 //------------------------------------------------------
 // PROCEDIMIENTOS DE INICIALIZACION DE LOS OBJETOS ESPECIFICOS
 //------------------------------------------------------
@@ -48,7 +49,6 @@ void InicializaPlayer (TipoPlayer *p_player) {
 	p_player->posicion_nota_actual=0;
 	p_player->frecuencia_nota_actual=p_player->p_efecto->frecuencias[0];
 	p_player->duracion_nota_actual=p_player->p_efecto->duraciones[0];
-	p_player->tmr = tmr_new (timer_player_duracion_nota_actual_isr);
 	//posible variable num_notas_totales
 
 }
@@ -110,13 +110,13 @@ int CompruebaFinalEfecto (fsm_t* this) {
 void InicializaPlayDisparo (fsm_t* this) {
 	piLock(PLAYER_FLAGS_KEY);
 	flags_player &= ~FLAG_START_DISPARO;
-	flags_player &= ~FLAG_NOTA_TIMEOUT;
+//	flags_player &= ~FLAG_NOTA_TIMEOUT;
 	TipoPlayer* p_player;
 	p_player=(TipoPlayer*) (this->user_data);
 	piUnlock(PLAYER_FLAGS_KEY);
 	InicializaPlayer(p_player);
-//	softToneCreate(23);
-//	softToneWrite(23,p_player->frecuencia_nota_actual);
+	softToneCreate(21);
+	softToneWrite(21,p_player->frecuencia_nota_actual);
 	ComienzaNuevaNota(this);
 	piLock(STD_IO_BUFFER_KEY);
 	printf("Inicio play disparo \n");
@@ -126,10 +126,12 @@ void InicializaPlayDisparo (fsm_t* this) {
 void InicializaPlayImpacto (fsm_t* this) {
 	piLock(PLAYER_FLAGS_KEY);
 	flags_player &= ~FLAG_START_IMPACTO;
-	InicializaPlayer(this->user_data);
+//	InicializaPlayer(this->user_data);
 	TipoPlayer* p_player=(TipoPlayer*) this->user_data;
 	piUnlock(PLAYER_FLAGS_KEY);
 	InicializaPlayer(p_player);
+	softToneCreate(21);
+	softToneWrite(21,p_player->frecuencia_nota_actual);
 	ComienzaNuevaNota(this);
 	piLock(STD_IO_BUFFER_KEY);
 	printf("Inicializa play impacto \n");
@@ -144,6 +146,7 @@ void ComienzaNuevaNota (fsm_t* this) {
 	piUnlock(PLAYER_FLAGS_KEY);
 	softToneCreate(21);
 	softToneWrite(21, p_player->frecuencia_nota_actual);
+	tmr_startms(p_player->tmr,p_player->duracion_nota_actual);
 	piLock(STD_IO_BUFFER_KEY);
 	printf("Comienza nueva nota \n");
 	piUnlock(STD_IO_BUFFER_KEY);
@@ -158,7 +161,6 @@ void ActualizaPlayer (fsm_t* this) {
 	p_player->posicion_nota_actual++;
 	p_player->duracion_nota_actual=p_player->p_efecto->duraciones[p_player->posicion_nota_actual];
 	p_player->frecuencia_nota_actual=p_player->p_efecto->frecuencias[p_player->posicion_nota_actual];
-	tmr_startms(this->user_data, p_player->duracion_nota_actual);
 	piUnlock(PLAYER_FLAGS_KEY);
 
 	piLock(STD_IO_BUFFER_KEY);
@@ -179,12 +181,9 @@ void FinalEfecto (fsm_t* this) {
 //------------------------------------------------------
 // PROCEDIMIENTOS DE ATENCION A LAS INTERRUPCIONES
 //------------------------------------------------------
-
 void timer_player_duracion_nota_actual_isr (union sigval value) {
-	// A completar por el alumno...
-	// ...
 	piLock(PLAYER_FLAGS_KEY);
-	flags_player |= FLAG_START_IMPACTO;
+	flags_player |= FLAG_NOTA_TIMEOUT;
 	piUnlock(PLAYER_FLAGS_KEY);
-	fflush(stdout);
 }
+

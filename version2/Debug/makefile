@@ -22,19 +22,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: version1.9
+all: version1
 
 # Tool invocations
-version1.9: $(OBJS) $(USER_OBJS)
+version1: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross GCC Linker'
-	arm-linux-gnueabihf-gcc -L"D:\Uni\TERCERO\SDG2\SysGCC\Raspberry\lib" -o "version1.9" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-linux-gnueabihf-gcc -L"H:\SysGCC\Raspberry\lib" -o "version1" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) version1.9
+	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) version1
 	-@echo ' '
 
 .PHONY: all clean dependents
