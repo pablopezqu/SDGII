@@ -7,17 +7,17 @@
 #include "fsm.h"
 #include "tmr.h"
 
-#define CLK_MS 10
+//#define CLK_MS 10
 
 // ATENCION: Valores a modificar por el alumno
 // INTERVALO DE GUARDA ANTI-REBOTES
-#define	DEBOUNCE_TIME	200
+//#define	DEBOUNCE_TIME	0
 // DURACION DISPARO IR
-#define SHOOTING_PERIOD 0
+//#define SHOOTING_PERIOD 0
 
 // CLAVES PARA MUTEX
 // ATENCION: Valores a modificar por el alumno
-#define	SYSTEM_FLAGS_KEY	1	//Valores?
+#define	SYSTEM_FLAGS_KEY	1
 #define	PLAYER_FLAGS_KEY	2
 #define	STD_IO_BUFFER_KEY	3
 

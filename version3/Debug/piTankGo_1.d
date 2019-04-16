@@ -1,6 +1,6 @@
 piTankGo_1.o: ../piTankGo_1.c ../piTankGo_1.h \
  H:\SysGCC\Raspberry\include\wiringPi/wiringPi.h ../kbhit.h ../player.h \
- ../piTankGoLib.h ../fsm.h ../tmr.h ../torreta.h ../teclado_TL04.h
+ ../piTankGoLib.h ../fsm.h ../tmr.h ../torreta.h ../teclado.h
 
 ../piTankGo_1.h:
 
@@ -18,4 +18,4 @@ H:\SysGCC\Raspberry\include\wiringPi/wiringPi.h:
 
 ../torreta.h:
 
-../teclado_TL04.h:
+../teclado.h:

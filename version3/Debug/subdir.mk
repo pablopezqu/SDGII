@@ -8,7 +8,7 @@ C_SRCS += \
 ../kbhit.c \
 ../piTankGo_1.c \
 ../player.c \
-../teclado_TL04.c \
+../teclado.c \
 ../tmr.c \
 ../torreta.c 
 
@@ -17,7 +17,7 @@ OBJS += \
 ./kbhit.o \
 ./piTankGo_1.o \
 ./player.o \
-./teclado_TL04.o \
+./teclado.o \
 ./tmr.o \
 ./torreta.o 
 
@@ -26,7 +26,7 @@ C_DEPS += \
 ./kbhit.d \
 ./piTankGo_1.d \
 ./player.d \
-./teclado_TL04.d \
+./teclado.d \
 ./tmr.d \
 ./torreta.d 
 

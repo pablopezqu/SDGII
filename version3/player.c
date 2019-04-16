@@ -173,6 +173,8 @@ void FinalEfecto (fsm_t* this) {
 	flags_player &= ~FLAG_PLAYER_END;
 	piUnlock(PLAYER_FLAGS_KEY);
 
+	softToneWrite(21,0);
+
 	piLock(STD_IO_BUFFER_KEY);
 	printf("Final efecto \n");
 	piUnlock(STD_IO_BUFFER_KEY);
