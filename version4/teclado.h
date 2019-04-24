@@ -9,20 +9,22 @@
 
 #include "fsm.h"
 #include "tmr.h"
+#include "piTankGo_1.h"
+#include "piTankGoLib.h"
+#include "torreta.h"
 
-#define GPIO_COL_1 0
-#define GPIO_COL_2 1
-#define GPIO_COL_3 2
-#define GPIO_COL_4 3
+#define GPIO_COL_1 5
+#define GPIO_COL_2 12
+#define GPIO_COL_3 16
+#define GPIO_COL_4 20
 
-#define GPIO_ROW_1 5
-#define GPIO_ROW_2 6
-#define GPIO_ROW_3 12
-#define GPIO_ROW_4 13
+#define GPIO_ROW_1 6
+#define GPIO_ROW_2 13
+#define GPIO_ROW_3 19
+#define GPIO_ROW_4 26
 
-//#define CLK_MS 			5
-//#define	DEBOUNCE_TIME	200
-
+#define CLK_MS 			5
+#define	DEBOUNCE_TIME	200
 #define COL_REFRESH_TIME 25
 
 #define	FLAG_KEY			0
@@ -68,8 +70,8 @@ typedef struct {
 	tmr_t* tmr_duracion_columna;
 	TipoTecla teclaPulsada;
 } TipoTeclado;
-//extern TipoTeclado teclado;
-int CompruebaColumnTimeout (fsm_t* this);
+
+int CompruebaColumnTimeout ();
 void row_1_isr (void);
 void row_2_isr (void);
 void row_3_isr (void);
@@ -83,5 +85,4 @@ void process_key (fsm_t* this);
 void delay_until (unsigned int next);
 void timer_duracion_columna_isr (union sigval value);
 int initialize(TipoTeclado *p_teclado);
-
 #endif /* _TECLADO_TL04_H_ */

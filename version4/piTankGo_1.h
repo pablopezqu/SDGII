@@ -15,6 +15,8 @@
 #include "kbhit.h" // Para poder detectar teclas pulsadas sin bloqueo y leer las teclas pulsadas
 #include "player.h"
 #include "torreta.h"
+#include "teclado.h"
+#include "joystick.h"
 
 // Posibles estados de las FSMs
 enum fsm_state {

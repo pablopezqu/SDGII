@@ -5,7 +5,8 @@
 #include <string.h>
 #include "fsm.h"
 #include "tmr.h"
-#include "teclado_TL04.h"
+#include "teclado.h"
+#include "joystick.h"
 int frecuenciaDespacito[160] = {0,1175,1109,988,740,740,740,740,740,740,988,988,988,988,880,988,784,0,784,784,784,784,784,988,988,988,988,1109,1175,880,0,880,880,880,880,880,1175,1175,1175,1175,1318,1318,1109,0,1175,1109,988,740,740,740,740,740,740,988,988,988,988,880,988,784,0,784,784,784,784,784,988,988,988,988,1109,1175,880,0,880,880,880,880,880,1175,1175,1175,1175,1318,1318,1109,0,1480,1318,1480,1318,1480,1318,1480,1318,1480,1318,1480,1568,1568,1175,0,1175,1568,1568,1568,0,1568,1760,1568,1480,0,1480,1480,1480,1760,1568,1480,1318,659,659,659,659,659,659,659,659,554,587,1480,1318,1480,1318,1480,1318,1480,1318,1480,1318,1480,1568,1568,1175,0,1175,1568,1568,1568,1568,1760,1568,1480,0,1480,1480,1480,1760,1568,1480,1318};
 int tiempoDespacito[160] = {1200,600,600,300,300,150,150,150,150,150,150,150,150,300,150,300,343,112,150,150,150,150,150,150,150,150,300,150,300,300,150,150,150,150,150,150,150,150,150,300,150,300,800,300,600,600,300,300,150,150,150,150,150,150,150,150,300,150,300,343,112,150,150,150,150,150,150,150,150,300,150,300,300,150,150,150,150,150,150,150,150,150,300,150,300,450,1800,150,150,150,150,300,150,300,150,150,150,300,150,300,450,450,300,150,150,225,75,150,150,300,450,800,150,150,300,150,150,300,450,150,150,150,150,150,150,150,150,300,300,150,150,150,150,150,150,450,150,150,150,300,150,300,450,450,300,150,150,150,300,150,300,450,800,150,150,300,150,150,300,450};
 int frecuenciaGOT[518] = {1568,0,1046,0,1244,0,1397,0,1568,0,1046,0,1244,0,1397,0,1175,0,1397,0,932,0,1244,0,1175,0,1397,0,932,0,1244,0,1175,0,1046,0,831,0,698,0,523,0,349,0,784,0,523,0,523,0,587,0,622,0,698,0,784,0,523,0,622,0,698,0,784,0,523,0,622,0,698,0,587,0,698,0,466,0,622,0,587,0,698,0,466,0,622,0,587,0,523,0,523,0,587,0,622,0,698,0,784,0,523,0,622,0,698,0,784,0,523,0,622,0,698,0,587,0,698,0,466,0,622,0,587,0,698,0,466,0,622,0,587,0,523,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1175,0,587,0,622,0,587,0,523,0,587,0,784,0,880,0,932,0,1046,0,1175,0,0,1397,0,0,932,0,0,1244,0,0,1175,0,0,1397,0,0,932,0,0,1244,0,0,1175,0,0,1046,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1568,0,0,1046,0,0,1244,0,0,1397,0,0,1175,0,880,0,784,0,932,0,1244,0,0,1397,0,0,932,0,0,1175,0,0,1244,0,0,1175,0,0,932,0,0,1046,0,0,2093,0,622,0,831,0,932,0,1046,0,622,0,831,0,1046,0,0,1865,0,622,0,784,0,831,0,932,0,622,0,784,0,932,0,0,1661,0,523,0,698,0,784,0,831,0,523,0,698,0,831,0,0,1568,0,1046,0,1244,0,1397,0,1568,0,1046,0,1244,0,1397,0,0,0,1661,0,1046,0,1175,0,1244,0,831,0,1175,0,1244,0,0,0,0,2489,0,0,0,0,2794,0,0,0,0,3136,0,0,2093,0,622,0,831,0,932,0,1046,0,622,0,831,0,1046,0,0,1865,0,622,0,784,0,831,0,932,0,622,0,784,0,932,0,0,1661,0,523,0,698,0,784,0,831,0,523,0,698,0,831,0,0,1568,0,1046,0,1244,0,1397,0,1568,0,1046,0,1244,0,1397,0,0,0,1661,0,1046,0,1175,0,1244,0,831,0,1175,0,1244,0,0,0,0,2489,0,1397,0,0,0,2350,0,0,0,2489,0,0,0,2350,0,0,0,0,2093,0,392,0,415,0,466,0,523,0,392,0,415,0,466,0,523,0,392,0,415,0,466,0,2093,0,1568,0,1661,0,1865,0,2093,0,1568,0,1661,0,1865,0,2093,0,1568,0,1661,0,1865};
@@ -50,10 +51,13 @@ int ConfiguraSistema (TipoSistema *p_sistema) {
 // igualmente arrancará el thread de exploración del teclado del PC
 int InicializaSistema (TipoSistema *p_sistema) {
 	int result = 0;
+
+	// A completar por el alumno...
+	// ...
 	InicializaEfecto(&p_sistema->player.efecto_disparo,"DISPARO",frecuenciaGOT,tiempoGOT,518);
 	p_sistema->player.p_efecto=&p_sistema->player.efecto_disparo;
-//	InicializaEfecto(&p_sistema->player.efecto_impacto,"IMPACTO",frecuenciaTetris,tiempoTetris,55);
-//	p_sistema->player.p_efecto=&p_sistema->player.efecto_impacto;
+	InicializaEfecto(&p_sistema->player.efecto_impacto,"IMPACTO",frecuenciaTetris,tiempoTetris,55);
+	p_sistema->player.p_efecto=&p_sistema->player.efecto_impacto;
 	InicializaPlayer(&p_sistema->player);
 	p_sistema->player.tmr=tmr_new(timer_player_duracion_nota_actual_isr);
 	// Lanzamos thread para exploracion del teclado convencional del PC
@@ -101,6 +105,15 @@ PI_THREAD (thread_explora_teclado_PC) {
 					printf("Tecla S pulsada!\n");
 					fflush(stdout);
 					break;
+				case 'v':
+					// A completar por el alumno...
+					// ...
+					piLock(SYSTEM_FLAGS_KEY);
+					flags_juego |= FLAG_SYSTEM_START;
+					piUnlock(SYSTEM_FLAGS_KEY);
+					printf("Tecla V pulsada!\n");
+					fflush(stdout);
+					break;
 
 				case 'q':
 					exit(0);
@@ -125,27 +138,16 @@ void delay_until (unsigned int next) {
 	}
 }
 
-
 extern TipoTeclado teclado;
-
 
 int main ()
 {
 	TipoSistema sistema;
-	TipoTorreta torreta;
-
 	unsigned int next;
 
-	// Configuracion e inicializacion del sistema
 	ConfiguraSistema (&sistema);
-
 	InicializaSistema (&sistema);
-
-	initialize(&teclado);
-
-	InicializaTorreta(&torreta);
-	sistema.torreta=torreta;
-
+	InicializaTorreta(&sistema.torreta);
 
 	fsm_trans_t reproductor[] = {
 		{ WAIT_START, CompruebaStartDisparo, WAIT_NEXT, InicializaPlayDisparo },
@@ -157,46 +159,48 @@ int main ()
 		{-1, NULL, -1, NULL },
 	};
 
-	fsm_trans_t columns[] = {		//Add teclado
-			{ KEY_COL_1, CompruebaColumnTimeout, KEY_COL_2, col_2 },
-			{ KEY_COL_2, CompruebaColumnTimeout, KEY_COL_3, col_3 },
-			{ KEY_COL_3, CompruebaColumnTimeout, KEY_COL_4, col_4 },
-			{ KEY_COL_4, CompruebaColumnTimeout, KEY_COL_1, col_1 },
-			{-1, NULL, -1, NULL },
-		};
+	fsm_trans_t columns[] = {
+		{ KEY_COL_1, CompruebaColumnTimeout, KEY_COL_2, col_2 },
+		{ KEY_COL_2, CompruebaColumnTimeout, KEY_COL_3, col_3 },
+		{ KEY_COL_3, CompruebaColumnTimeout, KEY_COL_4, col_4 },
+		{ KEY_COL_4, CompruebaColumnTimeout, KEY_COL_1, col_1 },
+		{-1, NULL, -1, NULL },
+	};
 
-	fsm_trans_t keypad[] = {		//add teclado
+	fsm_trans_t keypad[] = {
 		{ KEY_WAITING, key_pressed, KEY_WAITING, process_key},
 		{-1, NULL, -1, NULL },
 	};
 
-
 	fsm_trans_t torretast[] = {
-		{WAIT_START, CompruebaComienzo,WAIT_MOVE, ComienzaSistema},
-		{WAIT_MOVE, CompruebaJoystickUp, WAIT_MOVE, MueveTorretaArriba},
-		{WAIT_MOVE, CompruebaJoystickDown, WAIT_MOVE, MueveTorretaAbajo},
-		{WAIT_MOVE, CompruebaJoystickLeft, WAIT_MOVE, MueveTorretaIzquierda},
-		{WAIT_MOVE, CompruebaJoystickRight, WAIT_MOVE, MueveTorretaDerecha},
-		{WAIT_MOVE, CompruebaTriggerButton, TRIGGER_BUTTON, DisparoIR},
-		{WAIT_MOVE, CompruebaFinalJuego, TRIGGER_BUTTON, FinalizaJuego},
-		{TRIGGER_BUTTON, CompruebaTimeoutDisparo, WAIT_MOVE, FinalDisparoIR},
-		{TRIGGER_BUTTON, CompruebaImpacto, WAIT_MOVE, ImpactoDetectado},
-		{-1, NULL, -1, NULL },
+			{WAIT_START, CompruebaComienzo,WAIT_MOVE, ComienzaSistema},
+			{WAIT_MOVE, CompruebaJoystickUp, WAIT_MOVE, MueveTorretaArriba},
+			{WAIT_MOVE, CompruebaJoystickDown, WAIT_MOVE, MueveTorretaAbajo},
+			{WAIT_MOVE, CompruebaJoystickLeft, WAIT_MOVE, MueveTorretaIzquierda},
+			{WAIT_MOVE, CompruebaJoystickRight, WAIT_MOVE, MueveTorretaDerecha},
+			{WAIT_MOVE, CompruebaTriggerButton, TRIGGER_BUTTON, DisparoIR},
+			{WAIT_MOVE, CompruebaFinalJuego, TRIGGER_BUTTON, FinalizaJuego},
+			{TRIGGER_BUTTON, CompruebaTimeoutDisparo, WAIT_MOVE, FinalDisparoIR},
+			{TRIGGER_BUTTON, CompruebaImpacto, WAIT_MOVE, ImpactoDetectado},
+			{-1, NULL, -1, NULL },
 	};
 
+	initialize(&teclado);
 
+
+
+	fsm_t* player_fsm = fsm_new (WAIT_START, reproductor, &(sistema.player));
 	fsm_t* columns_fsm = fsm_new (KEY_COL_1, columns, &teclado);
 	fsm_t* keypad_fsm = fsm_new (KEY_WAITING, keypad, &teclado);
-	fsm_t* torreta_fsm = fsm_new (WAIT_START, torretast, &torreta);
-	fsm_t* player_fsm = fsm_new (WAIT_START, reproductor, &(sistema.player));
+	fsm_t* torreta_fsm = fsm_new (WAIT_START, torretast, &sistema.torreta);
 
 	next = millis();
 	while (1) {
 		fsm_fire (player_fsm);
-		// A completar por el alumno...
 		fsm_fire (columns_fsm);
 		fsm_fire (keypad_fsm);
 		fsm_fire(torreta_fsm);
+
 		next += CLK_MS;
 		delay_until (next);
 	}

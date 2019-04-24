@@ -50,7 +50,6 @@ void InicializaPlayer (TipoPlayer *p_player) {
 	p_player->frecuencia_nota_actual=p_player->p_efecto->frecuencias[0];
 	p_player->duracion_nota_actual=p_player->p_efecto->duraciones[0];
 	//posible variable num_notas_totales
-	softToneCreate(21);
 
 }
 
@@ -111,6 +110,7 @@ int CompruebaFinalEfecto (fsm_t* this) {
 void InicializaPlayDisparo (fsm_t* this) {
 	piLock(PLAYER_FLAGS_KEY);
 	flags_player &= ~FLAG_START_DISPARO;
+//	flags_player &= ~FLAG_NOTA_TIMEOUT;
 	TipoPlayer* p_player;
 	p_player=(TipoPlayer*) (this->user_data);
 	piUnlock(PLAYER_FLAGS_KEY);
@@ -130,7 +130,7 @@ void InicializaPlayImpacto (fsm_t* this) {
 	TipoPlayer* p_player=(TipoPlayer*) this->user_data;
 	piUnlock(PLAYER_FLAGS_KEY);
 	InicializaPlayer(p_player);
-	//softToneCreate(21);
+	softToneCreate(21);
 	softToneWrite(21,p_player->frecuencia_nota_actual);
 	ComienzaNuevaNota(this);
 	piLock(STD_IO_BUFFER_KEY);
@@ -144,7 +144,7 @@ void ComienzaNuevaNota (fsm_t* this) {
 	flags_player &= ~FLAG_PLAYER_END;
 	//int frec=p_player->frecuencia_nota_actual;
 	piUnlock(PLAYER_FLAGS_KEY);
-	//softToneCreate(21);
+	softToneCreate(21);
 	softToneWrite(21, p_player->frecuencia_nota_actual);
 	tmr_startms(p_player->tmr,p_player->duracion_nota_actual);
 	piLock(STD_IO_BUFFER_KEY);
@@ -172,7 +172,9 @@ void FinalEfecto (fsm_t* this) {
 	piLock(PLAYER_FLAGS_KEY);
 	flags_player &= ~FLAG_PLAYER_END;
 	piUnlock(PLAYER_FLAGS_KEY);
+
 	softToneWrite(21,0);
+
 	piLock(STD_IO_BUFFER_KEY);
 	printf("Final efecto \n");
 	piUnlock(STD_IO_BUFFER_KEY);

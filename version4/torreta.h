@@ -2,7 +2,7 @@
  * torreta.h
  *
  *  Created on: 21 de enero de 2019
- *      Author: FFM
+ *
  */
 
 #ifndef _TORRETA_H_
@@ -23,6 +23,7 @@
 
 #define SERVO_PIN_X 18
 #define SERVO_PIN_Y 22
+
 
 typedef struct {
 	int inicio; // Valor correspondiente a la posicion inicial del servo
@@ -46,6 +47,8 @@ typedef struct {
 } TipoTorreta;
 
 extern int flags_juego;
+
+extern TipoTorreta torreta;
 
 // Prototipos de procedimientos de inicializacion de los objetos especificos
 void InicializaTorreta (TipoTorreta *p_torreta);
