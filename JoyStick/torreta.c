@@ -1,5 +1,6 @@
 
 #include "torreta.h"
+#include "joystick.h"
 
 //------------------------------------------------------
 // PROCEDIMIENTOS DE INICIALIZACION DE LOS OBJETOS ESPECIFICOS
@@ -30,6 +31,7 @@ void InicializaTorreta (TipoTorreta *p_torreta) {
 	flags_juego |= FLAG_SYSTEM_START;
 	piUnlock(SYSTEM_FLAGS_KEY);
 
+	inicia();
 }
 
 //------------------------------------------------------

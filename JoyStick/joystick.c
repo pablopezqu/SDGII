@@ -26,6 +26,7 @@ int inicia() {
 	wiringPiISR (JS_L, INT_EDGE_RISING, mvIzquierda);
 
 	printf("joystick start");
+	fflush(stdout);
 
 //piLock(SYSTEM_FLAGS_KEY);
 //flags_juego |= FLAG_SYSTEM_START;
